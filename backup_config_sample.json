@@ -1,12 +1,18 @@
 {
     "backup_configs": [
         {
+            "name": "job1",
+            "tag": "backup",
+            "direction": "up",
             "port": 22,
             "backup_docs": ["dir1", "dir2"],
             "remote_path": "user@<ip>:<remote_path1>",
             "local_path": "<local_path1>"
         },
         {
+            "name": "job2",
+            "tag": "syncDown",
+            "direction": "down",
             "port": 22,
             "backup_docs": ["dir2", "dir3"],
             "remote_path": "user@<ip>:<remote_path2>",
