@@ -92,6 +92,7 @@ backup_files() {
     local direction=$5
     local backup=$6
     local delete_option=$7
+    local exclude=$8
 
     local rsync_options=""
     if [ "$backup" = true ]; then
@@ -102,6 +103,10 @@ backup_files() {
 
     if [ "$delete_option" = "true" ]; then
         rsync_options="$rsync_options --delete"
+    fi
+
+    if [ -n "$exclude" ]; then
+        rsync_options="$rsync_options --exclude=\"$exclude\""
     fi
 
     local source_and_destination=($(get_source_and_destination backup_docs[@] "$remote_path" "$local_path" "$direction"))
@@ -143,6 +148,7 @@ for backup_config in "${backup_configs[@]}"; do
     remote_path=$(echo "$backup_config" | jq -r '.remote_path')
     local_path=$(echo "$backup_config" | jq -r '.local_path')
     delete_option=$(echo "$backup_config" | jq -r '.delete // false')
+    exclude=$(echo "$backup_config" | jq -r '.exclude // ""')
 
-    backup_files "$port" backup_docs[@] "$remote_path" "$local_path" "$direction" $backup "$delete_option"
+    backup_files "$port" backup_docs[@] "$remote_path" "$local_path" "$direction" $backup "$delete_option" "$exclude"
 done
