@@ -19,6 +19,16 @@
             "backup_docs": ["dir2", "dir3"],
             "remote_path": "user@<ip>:<remote_path2>",
             "local_path": "<local_path2>"
+        },
+        {
+            "name": "job3",
+            "tag": "backupToMount",
+            "direction": "up",
+            "backup_docs": ["dir1", "dir2"],
+            "remote_path": "<mount_path>",
+            "local_path": "<local_path3>",
+            "delete": "true",
+            "exclude": "dir"
         }
     ]
 }

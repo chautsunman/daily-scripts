@@ -109,6 +109,11 @@ backup_files() {
         rsync_options="$rsync_options --exclude=\"$exclude\""
     fi
 
+    local ssh_options=""
+    if [ "$port" -gt 0 ]; then
+        ssh_options="-e 'ssh -p $port'"
+    fi
+
     local source_and_destination=($(get_source_and_destination backup_docs[@] "$remote_path" "$local_path" "$direction"))
     local source=("${source_and_destination[@]:0:${#source_and_destination[@]}-1}")
     local destination="${source_and_destination[${#source_and_destination[@]}-1]}"
@@ -119,7 +124,7 @@ backup_files() {
     echo "destination: $destination"
     echo "rsync_options: $rsync_options"
 
-    local rsync_command="rsync $rsync_options -e 'ssh -p $port' ${source[@]} $destination"
+    local rsync_command="rsync $rsync_options $ssh_options ${source[@]} $destination"
     echo "Running command: $rsync_command"
     eval $rsync_command
 }
@@ -140,7 +145,7 @@ for backup_config in "${backup_configs[@]}"; do
     fi
 
     direction=$(echo "$backup_config" | jq -r '.direction')
-    port=$(echo "$backup_config" | jq -r '.port')
+    port=$(echo "$backup_config" | jq -r '.port // -1')
     backup_docs=()
     while IFS=$'\n' read -r line; do
         backup_docs+=("$line")
